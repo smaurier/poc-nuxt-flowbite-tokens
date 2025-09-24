@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply font-sans bg-bg text-text antialiased;
+  }
+
+  body {
+    @apply min-h-screen bg-bg text-text;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .card-surface {
+    @apply rounded-md border border-[color:var(--color-primary)] bg-bg p-4 shadow-sm;
+  }
+}
