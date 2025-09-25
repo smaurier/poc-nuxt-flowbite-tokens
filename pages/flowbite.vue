@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import {
-  FwbAlert,
-  FwbButton,
-  FwbDropdown,
-  FwbDropdownItem,
-  FwbModal,
-  FwbTab,
-  FwbTabs
-} from 'flowbite-vue'
+import { FwbAlert, FwbButton, FwbDropdown, FwbModal, FwbTab, FwbTabs } from 'flowbite-vue'
 
 const requestURL = useRequestURL()
 
@@ -36,6 +28,9 @@ const activeTab = ref('overview')
 
 const dropdownTriggerClass =
   'flex items-center gap-2 rounded-md border border-[color:var(--color-primary)] bg-primary px-4 py-2 text-sm font-medium text-[color:var(--color-primary-contrast)] transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[color:var(--color-primary)] focus-visible:outline-offset-2'
+
+const dropdownItemClass =
+  'block w-full rounded-md px-4 py-2 text-left text-sm text-text transition hover:bg-[color:var(--color-primary)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[color:var(--color-primary)] focus-visible:outline-offset-2'
 
 const buttonClass =
   'inline-flex items-center justify-center gap-2 rounded-md border border-[color:var(--color-primary)] bg-primary px-4 py-2 text-sm font-semibold text-[color:var(--color-primary-contrast)] transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[color:var(--color-primary)] focus-visible:outline-offset-2'
@@ -67,9 +62,11 @@ const debugJson = computed(() =>
       <div class="flex flex-wrap items-center gap-4">
         <FwbButton :class="buttonClass" @click="showModal = true">Launch modal</FwbButton>
         <FwbDropdown :trigger-class="dropdownTriggerClass" text="Token actions">
-          <FwbDropdownItem class="text-text hover:bg-[color:var(--color-primary)]/10">View docs</FwbDropdownItem>
-          <FwbDropdownItem class="text-text hover:bg-[color:var(--color-primary)]/10">Sync tokens</FwbDropdownItem>
-          <FwbDropdownItem class="text-text hover:bg-[color:var(--color-primary)]/10">Report contrast</FwbDropdownItem>
+          <div class="flex flex-col gap-1 p-1">
+            <button type="button" :class="dropdownItemClass">View docs</button>
+            <button type="button" :class="dropdownItemClass">Sync tokens</button>
+            <button type="button" :class="dropdownItemClass">Report contrast</button>
+          </div>
         </FwbDropdown>
       </div>
       <FwbAlert :class="alertClass" closable>

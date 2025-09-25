@@ -1,4 +1,3 @@
-import { readFile } from 'node:fs/promises'
 import { join } from 'pathe'
 
 const REQUIRED_KEYS = [
@@ -17,6 +16,7 @@ export type ThemeTokens = Record<(typeof REQUIRED_KEYS)[number] | string, string
 
 export async function readTokens(tenantId: string): Promise<ThemeTokens> {
   const filePath = join(process.cwd(), 'tokens', `${tenantId}.tokens.json`)
+  const { readFile } = await import('node:fs/promises')
   const raw = await readFile(filePath, 'utf8')
   const tokens = JSON.parse(raw) as ThemeTokens
   for (const key of REQUIRED_KEYS) {
