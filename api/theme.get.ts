@@ -1,5 +1,5 @@
 import { defineEventHandler } from 'h3'
-import { readTokens, toCSSVars } from '~/server/utils/theme'
+import { readTokens, toCSSVars } from '~/server/utils/theme.server'
 
 export default defineEventHandler(async (event) => {
   const tenantId = event.context.tenantId ?? 'beta'
