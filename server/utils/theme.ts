@@ -1,6 +1,5 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'pathe'
-import { useStorage } from '#imports'
 
 const REQUIRED_KEYS = [
   'color.primary',
@@ -17,39 +16,8 @@ const REQUIRED_KEYS = [
 export type ThemeTokens = Record<(typeof REQUIRED_KEYS)[number] | string, string | boolean>
 
 export async function readTokens(tenantId: string): Promise<ThemeTokens> {
-  const assetKey = `${tenantId}.tokens.json`
-  let raw: string | null = null
-
-  try {
-    const storage = useStorage('assets:tokens')
-    const asset = await storage?.getItem(assetKey)
-    if (asset) {
-      raw = asset.toString()
-    }
-  } catch (error) {
-    // ignore and fall back to reading from filesystem
-  }
-
-  if (!raw) {
-    const candidatePaths = [
-      join(process.cwd(), 'tokens', assetKey),
-      join(process.cwd(), '..', 'tokens', assetKey)
-    ]
-
-    for (const filePath of candidatePaths) {
-      try {
-        raw = await readFile(filePath, 'utf8')
-        break
-      } catch (error) {
-        // try next path
-      }
-    }
-  }
-
-  if (!raw) {
-    throw new Error(`Unable to load tokens for tenant "${tenantId}"`)
-  }
-
+  const filePath = join(process.cwd(), 'tokens', `${tenantId}.tokens.json`)
+  const raw = await readFile(filePath, 'utf8')
   const tokens = JSON.parse(raw) as ThemeTokens
   for (const key of REQUIRED_KEYS) {
     if (typeof tokens[key] === 'undefined') {
@@ -59,7 +27,10 @@ export async function readTokens(tenantId: string): Promise<ThemeTokens> {
   return tokens
 }
 
-export function toCSSVars(tokens: ThemeTokens): string {
+export function toCSSVars(
+  tokens: ThemeTokens,
+  options: { dark?: { bg?: string; text?: string } } = {}
+): string {
   const darkEnabled = Boolean(tokens['dark.enabled'])
   const lines: string[] = [
     ':root {',
@@ -75,8 +46,10 @@ export function toCSSVars(tokens: ThemeTokens): string {
   ]
 
   if (darkEnabled) {
-    const darkBg = (tokens['color.dark.bg'] as string | undefined) ?? (tokens['color.bg'] as string)
-    const darkText = (tokens['color.dark.text'] as string | undefined) ?? (tokens['color.text'] as string)
+    const darkBg =
+      options.dark?.bg ?? (tokens['color.dark.bg'] as string | undefined) ?? (tokens['color.bg'] as string)
+    const darkText =
+      options.dark?.text ?? (tokens['color.dark.text'] as string | undefined) ?? (tokens['color.text'] as string)
     lines.push(':root[data-theme="dark"] {')
     lines.push(`  --color-bg: ${darkBg};`)
     lines.push(`  --color-text: ${darkText};`)
