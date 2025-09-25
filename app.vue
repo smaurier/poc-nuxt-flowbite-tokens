@@ -21,31 +21,17 @@ const themeState = useState<ThemeState>('tenant-theme', () => ({
 
 const isDark = useState('tenant-dark', () => false)
 
-if (import.meta.server) {
-  const event = useRequestEvent()
-  const tenantId = event?.context.tenantId ?? 'beta'
-  const { readTokens, toCSSVars } = await import('~/server/utils/theme')
-  const tokens = await readTokens(tenantId)
-  const css = toCSSVars(tokens)
-  themeState.value = {
-    tenantId,
-    tokens,
-    css,
-    darkEnabled: Boolean(tokens['dark.enabled'])
-  }
-}
+const { data: themeData } = await useFetch<ThemePayload>('/api/theme')
 
-if (import.meta.client && !themeState.value.tokens) {
-  const { data } = await useFetch<ThemePayload>('/api/theme')
-  if (data.value) {
-    themeState.value = {
-      tenantId: data.value.tenantId,
-      tokens: data.value.tokens,
-      css: data.value.css,
-      darkEnabled: Boolean(data.value.tokens['dark.enabled'])
-    }
+watchEffect(() => {
+  if (!themeData.value) return
+  themeState.value = {
+    tenantId: themeData.value.tenantId,
+    tokens: themeData.value.tokens,
+    css: themeData.value.css,
+    darkEnabled: Boolean(themeData.value.tokens['dark.enabled'])
   }
-}
+})
 
 watch(
   () => themeState.value.darkEnabled,
