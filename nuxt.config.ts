@@ -1,14 +1,23 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
+  compatibilityDate: '2025-09-25',
   devtools: { enabled: true },
-
-  modules: [
-    '@nuxt/eslint',
-    '@nuxt/image',
-    '@nuxt/scripts',
-    '@nuxt/content',
-    '@nuxt/test-utils',
-    '@nuxt/ui'
-  ]
+  css: ['~/assets/css/tailwind.css'],
+  modules: [],
+  pages: true,
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {}
+    }
+  },
+  nitro: {
+    compatibilityDate: '2025-09-25',
+    routeRules: {},
+    serverAssets: [
+      {
+        baseName: 'tokens',
+        dir: 'tokens'
+      }
+    ]
+  }
 })

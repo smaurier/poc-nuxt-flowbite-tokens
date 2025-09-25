@@ -1,0 +1,11 @@
+{
+  "color.primary": "#A855F7",
+  "color.primary-contrast": "#0B0B0B",
+  "color.bg": "#0B0B0B",
+  "color.text": "#EDEDED",
+  "radius.md": "6px",
+  "font.family.sans": "Manrope, Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+  "space.2": "0.5rem",
+  "space.4": "1rem",
+  "dark.enabled": false
+}
